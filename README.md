@@ -1,4 +1,4 @@
-# SchedulExpert
+# SchedulExpert Enhanced
 
 ## Overview
 **SchedulExpert Enhanced** is an advanced extension of the "Self-Labeling Job Shop Scheduling" framework. This project introduces significant architectural improvements, robust hyperparameter search strategies (SMC, CEM), and enhanced testing utilities to push the state-of-the-art in solving the Job Shop Scheduling Problem (JSP) via self-supervised learning.
