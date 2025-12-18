@@ -1,0 +1,17 @@
+{
+    "data_path": "./dataset5k",
+    "model_path": null,
+    "enc_hidden": 64,
+    "enc_out": 64,
+    "mem_hidden": 64,
+    "mem_out": 64,
+    "clf_hidden": 64,
+    "lr": 0.0002,
+    "epochs": 20,
+    "bs": 128,
+    "beta": 512,
+    "n_experts": 4,
+    "scheduler_eta_min": 1e-06,
+    "scheduler_type": "reduce",
+    "latent_dim": 64
+}
