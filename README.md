@@ -44,9 +44,18 @@ We have extended the original repository with the following features:
 
 We have conducted extensive hyperparameter searches to validate the efficacy of our SMC and CEM sampling methods. The following plots summarize our findings on the dataset:
 
-- **Average Gap Analysis**: [View PDF](hyper_smc_cem_full/summary_avg_gap.pdf) - Shows the average optimality gap across different budgets.
-- **Maximum Gap Analysis**: [View PDF](hyper_smc_cem_full/summary_max_gap.pdf) - Highlights the worst-case performance improvements.
-- **Wall-time vs Performance**: [View PDF](hyper_smc_cem_full/summary_walltime.pdf) - detailed trade-off analysis between computational budget (time) and solution quality.
+- **Average Gap Analysis**:
+![Average Gap](hyper_smc_cem_full/summary_avg_gap.png)
+*Shows the average optimality gap across different budgets.*
+
+- **Maximum Gap Analysis**:
+![Maximum Gap](hyper_smc_cem_full/summary_max_gap.png)
+*Highlights the worst-case performance improvements.*
+
+- **Wall-time vs Performance**:
+![Walltime](hyper_smc_cem_full/summary_walltime.png)
+*Detailed trade-off analysis between computational budget (time) and solution quality.*
+
 
 > *Note: Click the links above to view the detailed PDF plots located in `hyper_smc_cem_full/`.*
 
