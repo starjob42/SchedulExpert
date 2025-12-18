@@ -1,104 +1,96 @@
-# Self-Labeling the Job Shop Scheduling Problem
+# SchedulExpert Enhanced
 
-We propose a Self-Supervised training strategy specifically designed for combinatorial problems.
-Inspired by Semi- and Self-Supervised learning, we show that it is possible to easily train generative models by sampling multiple solutions and using the best one according to the problem objective as a pseudo-label.
-In this way, we iteratively improve the model generation capability by relying only on its self-supervision, completely removing the need for optimality information.
+## Overview
+**SchedulExpert Enhanced** is an advanced extension of the "Self-Labeling Job Shop Scheduling" framework. This project introduces significant architectural improvements, robust hyperparameter search strategies (SMC, CEM), and enhanced testing utilities to push the state-of-the-art in solving the Job Shop Scheduling Problem (JSP) via self-supervised learning.
 
-We prove the effectiveness of this Self-Labeling strategy on the Job Shop Scheduling (JSP), a complex combinatorial problem that is receiving much attention from the Reinforcement Learning community.
-We propose a generative model based on the well-known Pointer Network and train it with our strategy.
-Experiments on two popular benchmarks demonstrate the potential of this approach as the resulting models outperform constructive heuristics and current state-of-the-art Reinforcement Learning proposals.
+---
 
-## Project Structure
+## Original Work
+This repository is a fork and enhancement of:
+**[SelfLabelingJobShop](https://github.com/AndreaCorsini1/SelfLabelingJobShop)** by Andrea Corsini et al.
 
-The project entrypoints are:
-- baselines.py: is the entrypoint for testing baseline algorithms.
-- test.py: is the file for testing the trained Self-labeling Pointer Networks (SPN).
-- testL2D.py: contains the code for generating the randomized results of `"Learning to Dispatch for Job Shop Scheduling via Deep Reinforcement Learning"` (L2D).
-- train.py: is the entrypoint for training generative model via the proposed self-labeling training strategy.
+> **Original Citation:**
+> *Self-Labeling the Job Shop Scheduling Problem*, Andrea Corsini, Angelo Porrello, Simone Calderara, Mauro Dell'Amico. Arxiv 2024.
 
-All the other files contain helper functions and utilities.
+We build upon their novel self-supervised training strategy but introduce a more powerful Graph Attention Network (GAT) encoder and a flexible sampling infrastructure.
 
-The JSP instances are divided into two folders:
-- dataset5k: contains the instances used for training models. We also include for each instance the best solution ever found.
-- benchmarks: contains the Lawrence's benchmark (LA), Taillard's benchmark (TA), Demirkol's benchmark (DMU), and the validation instances. 
+---
 
-For the Shifting Bottleneck Heuristic and the INSertion Algorithm refer to the 
-side project [ShiftingBottleneck](https://github.com/AndreaCorsini1/ShiftingBottleneck).
+## Key Contributions & Enhancements
 
-> The extended results of algorithms are reported in the output/Results.xlsx file.
+We have extended the original repository with the following features:
 
-
-## Dataset and benchmark instances
-
-All the instances used for training and testing follow the same structure.
-Here is a small example:
-
-```
-3 2             # Instance shape (num. jobs and num. machines)
-0 4 1 6         # First job
-1 9 0 3         # Second job
-0 4 1 6         # Third job
-39              # Instance upper bound 
-0 4 3           # Sequence of operations on machine 0
-2 1 5           # Sequence of operations on machine 1
-```
-
-The first line gives the number of jobs and machines in the instance. 
-In this example, the instance has 3 jobs and 2 machines. 
-
-Then, follow information about the jobs in the instance. Each job is 
-given as a sequence of pairs (machine index, processing time). 
-For example, the first job starts executing on machine 0 for 4 time units,
-and afterward it goes on machine 1 for 6 time units. The second and third jobs 
-follow the same structure.
-
-After the instance, there is an upper bound (UB) on the optimal solution of 
-the instance. For benchmark instances, we used the best-known UB in the 
-literature, while for dataset instances (dataset5k and benchmarks/validation 
-folders) we used the best UB ever found by our model during the trainings.
-After the UB line, it follows the solution producing that UB value, where 
-rows correspond to machines.
-
-
-## Requirements
-
-- PyTorch 13.1
-- PyTorch Geometric 2.2 (check the PyG site for installation instructions)
-- Tqdm
-- Gurobipy (requires an Academic/Professional license)
-- Pandas
-- Gym (necessary for running L2D) 
-- ORTools 9.8.3296
-
-It should also work with newer versions of PyTorch and PyTorch Geometric.  
-
-
-## Cite as:
-```
-@inproceedings{SelfJSP,
-    title = {Self-Labeling the Job Shop Scheduling Problem},
-    author = {Corsini, Andrea and Porrello, Angelo and Calderara, Simone and Dell'Amico, Mauro},
-    year={2024},
-    publisher={Arxiv},
-}
-
-## Contributions & Enhancements
-
-We have significantly significantly extended the original repository with the following features and architectural improvements:
-
-### 1. Architectural Improvements (`train_schedulexpert_improved.py`)
-- **Mixture of Experts (MoE)**: Integrated into the GATEncoder to enhance model capacity (`-use_moe`, `-n_experts`).
-- **Advanced Encodings**: Added Degree Positional Encodings (`-use_degree_pe`) and various jumping knowledge strategies.
+### 1. Architectural Improvements
+**Script:** `train_schedulexpert_improved.py`
+- **Mixture of Experts (MoE)**: Integrated into the GATEncoder to drastically increase model capacity without proportional computational cost (`-use_moe`, `-n_experts`).
+- **Advanced Encodings**: Added Degree Positional Encodings (`-use_degree_pe`) and flexible Jumping Knowledge (JK) strategies to capture graph topology better.
 - **Decoder Enhancements**: Implemented Feature-wise Linear Modulation (FiLM) and Global Attention mechanisms (`-use_film`, `-use_dec_global_attn`) in the MHADecoder.
-- **Training Infrastructure**: Added WandB integration for experiment tracking and support for advanced LR schedulers (CosineAnnealing, ReduceLROnPlateau).
+- **Training Infrastructure**: Fully integrated with **WandB** for experiment tracking and added support for advanced LR schedulers (CosineAnnealing, ReduceLROnPlateau).
 
-### 2. Advanced Hyperparameter Search & Sampling (`hyperparam_search_smc_cem.py`)
-- **Sequential Monte Carlo (SMC)**: Implemented SMC for more robust sampling during inference/search.
-- **Cross-Entropy Method (CEM)**: Added CEM-guided sampling to iteratively improve solution quality.
+### 2. Advanced Hyperparameter Search & Sampling
+**Script:** `hyperparam_search_smc_cem.py`
+- **Sequential Monte Carlo (SMC)**: Implemented SMC for robust, population-based sampling during inference, allowing the model to escape local optima.
+- **Cross-Entropy Method (CEM)**: Added CEM-guided sampling to iteratively refine the sampling distribution towards better solutions.
 - **Analysis Tools**: Included `find_best_hparams.py` and clustering/plotting utilities to analyze the trade-offs between wall-time and optimality gaps.
 
-### 3. Improved Testing & Visualization (`test_schedulexpert.py`)
+### 3. Improved Testing & Visualization
+**Script:** `test_schedulexpert.py`
 - **Flexible Testing**: New testing script supporting instance filtering (by job/machine count) and latent space visualization.
 - **Benchmarking**: Utilities to compare the improved `SchedulExpert` architecture against baselines.
 
+---
+
+## Results and Performance
+
+We have conducted extensive hyperparameter searches to validate the efficacy of our SMC and CEM sampling methods. The following plots summarize our findings on the dataset:
+
+- **Average Gap Analysis**: [View PDF](hyper_smc_cem_full/summary_avg_gap.pdf) - Shows the average optimality gap across different budgets.
+- **Maximum Gap Analysis**: [View PDF](hyper_smc_cem_full/summary_max_gap.pdf) - Highlights the worst-case performance improvements.
+- **Wall-time vs Performance**: [View PDF](hyper_smc_cem_full/summary_walltime.pdf) - detailed trade-off analysis between computational budget (time) and solution quality.
+
+> *Note: Click the links above to view the detailed PDF plots located in `hyper_smc_cem_full/`.*
+
+---
+
+## Usage
+
+### Training the Enhanced Model
+To train the model with the new architectural features (e.g., MoE, FiLM, Degree PE):
+```bash
+python train_schedulexpert_improved.py \
+    -data_path /path/to/dataset \
+    -val_path ./benchmarks/TA \
+    -use_moe -n_experts 4 \
+    -use_degree_pe \
+    -use_film \
+    -bs 16 -beta 8
 ```
+
+### Hyperparameter Search (SMC/CEM)
+To run a search comparing different sampling strategies:
+```bash
+python hyperparam_search_smc_cem.py \
+    -model_path checkpoints/your_model.pt \
+    -test_path benchmarks/TA \
+    -method smc \
+    -output_dir output/search_results
+```
+
+### Testing and Visualization
+To test a trained model and generate results:
+```bash
+python test_schedulexpert.py \
+    -folder_path checkpoints/your_run_name \
+    -benchmark TA \
+    -num_instances 80 \
+    -infer_sch_expert
+```
+
+---
+
+## Dependencies
+- PyTorch 1.13+
+- PyTorch Geometric 2.2+
+- WandB (for logging)
+- Matplotlib, Seaborn (for plotting)
+- Tqdm, Pandas
