@@ -81,4 +81,24 @@ It should also work with newer versions of PyTorch and PyTorch Geometric.
     year={2024},
     publisher={Arxiv},
 }
+
+## Contributions & Enhancements
+
+We have significantly significantly extended the original repository with the following features and architectural improvements:
+
+### 1. Architectural Improvements (`train_schedulexpert_improved.py`)
+- **Mixture of Experts (MoE)**: Integrated into the GATEncoder to enhance model capacity (`-use_moe`, `-n_experts`).
+- **Advanced Encodings**: Added Degree Positional Encodings (`-use_degree_pe`) and various jumping knowledge strategies.
+- **Decoder Enhancements**: Implemented Feature-wise Linear Modulation (FiLM) and Global Attention mechanisms (`-use_film`, `-use_dec_global_attn`) in the MHADecoder.
+- **Training Infrastructure**: Added WandB integration for experiment tracking and support for advanced LR schedulers (CosineAnnealing, ReduceLROnPlateau).
+
+### 2. Advanced Hyperparameter Search & Sampling (`hyperparam_search_smc_cem.py`)
+- **Sequential Monte Carlo (SMC)**: Implemented SMC for more robust sampling during inference/search.
+- **Cross-Entropy Method (CEM)**: Added CEM-guided sampling to iteratively improve solution quality.
+- **Analysis Tools**: Included `find_best_hparams.py` and clustering/plotting utilities to analyze the trade-offs between wall-time and optimality gaps.
+
+### 3. Improved Testing & Visualization (`test_schedulexpert.py`)
+- **Flexible Testing**: New testing script supporting instance filtering (by job/machine count) and latent space visualization.
+- **Benchmarking**: Utilities to compare the improved `SchedulExpert` architecture against baselines.
+
 ```
